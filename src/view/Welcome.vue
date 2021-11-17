@@ -99,22 +99,23 @@ export default {
 
         handleAnalysis() {
             if(!this.checkInput()) return ;
-            let ajax = new XMLHttpRequest();
-            ajax.open("POST", "http://127.0.0.1:5000/api/analysis", true);
-            ajax.setRequestHeader("Content-type", "application/json");
-            ajax.onreadystatechange = function() {
-                if (ajax.readyState == 4 && ajax.status == 200) {
-                    console.log(ajax.responseText);
-                    this.centerDialogVisible = true;
-                }
-            }.bind(this);
-            ajax.send(JSON.stringify({
-                text: this.text,
-                title: this.title,
-                author: this.author,
-                question: this.question
-                }
-            ));
+            this.centerDialogVisible = true;
+            // let ajax = new XMLHttpRequest();
+            // ajax.open("POST", "http://127.0.0.1:5000/api/analysis", true);
+            // ajax.setRequestHeader("Content-type", "application/json");
+            // ajax.onreadystatechange = function() {
+            //     if (ajax.readyState == 4 && ajax.status == 200) {
+            //         console.log(ajax.responseText);
+            //         this.centerDialogVisible = true;
+            //     }
+            // }.bind(this);
+            // ajax.send(JSON.stringify({
+            //     text: this.text,
+            //     title: this.title,
+            //     author: this.author,
+            //     question: this.question
+            //     }
+            // ));
         }
     },
     computed: {

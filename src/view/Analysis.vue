@@ -1,5 +1,17 @@
 <template>
   <div class="analysis-container">
+    <el-dialog
+        style="font-family: lobster;"
+        title="Want to ask more questions ?"
+        :visible.sync="QADialogVisible"
+        width="70%"
+        center
+        append-to-body>
+        <QADialog />
+    </el-dialog>
+    <el-button type="primary" @click="askNewQuestion" class="new-question">
+      QA
+    </el-button>
       <div class="ts-fd">
         <el-card class="box-card-ts">
             <div slot="header" class="clearfix">
@@ -14,23 +26,42 @@
             <el-progress type="circle" :percentage="0"></el-progress>
         </el-card>
       </div>
-      <div class="qa">
-        <el-card class="box-card-qa">
-            <div slot="header" class="clearfix">
-                <span>Answer for Question</span>
-            </div>
-            <el-progress type="circle" :percentage="0"></el-progress>
-        </el-card>
+      <div v-for="obj in qa_obj" class="qa">
+        <div class="qa">
+          <el-card class="box-card-qa">
+              <div slot="header" class="clearfix">
+                  <span>{{obj.question}}</span>
+              </div>
+              <div class="qa-content">
+                  <span>{{obj.answer}}</span>
+              </div>
+          </el-card>
+        </div>
       </div>
+      
   </div>
 </template>
 
 <script>
+import QADialog from './QADialog.vue'
 export default {
     name: 'Analysis',
+    components: {
+        QADialog
+    },
     data() {
         return {
-            //
+            qa_obj: [
+              {
+                question: 'What is the purpose of this project?',
+                answer: 'This project is to help people to understand the news and to make a decision about whether to read the news or not.'
+              },
+              {
+                question: 'What is the purpose of this project?',
+                answer: 'This project is to help people to understand the news and to make a decision about whether to read the news or not.'
+              },
+            ],
+            QADialogVisible: false,
         }
     },
     computed: {
@@ -38,6 +69,9 @@ export default {
     },
     methods: {
         //
+        askNewQuestion() {
+            this.QADialogVisible = true;
+        },
     },
 }
 </script>
@@ -91,13 +125,21 @@ export default {
     margin-left: 30px;
   }
   .box-card-ts {
-    width: 70vh;
+    width: 80vh;
   }
   .qa {
       margin: 0 auto;
       padding-top: 15px;
   }
   .box-card-qa {
-    width: calc(70vh + 180px);
+    width: calc(80vh + 180px);
+  }
+  .new-question {
+    width: 5vw;
+    height: 4vh;
+    position: absolute;
+    right: 30px;
+    top: 300px;
+    font-family: lobster;
   }
 </style>
