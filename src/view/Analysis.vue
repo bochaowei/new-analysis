@@ -150,6 +150,7 @@ export default {
   }
   .clearfix {
       text-align: center;
+      font-family: monospace;
   }
 
   .box-card {
@@ -162,6 +163,9 @@ export default {
   .qa {
       margin: 0 auto;
       padding-top: 15px;
+  }
+  .qa-content {
+      font-family: monospace;
   }
   .box-card-qa {
     width: calc(80vh + 180px);
