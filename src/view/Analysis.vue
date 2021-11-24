@@ -7,7 +7,7 @@
         width="70%"
         center
         append-to-body>
-        <QADialog />
+        <QADialog :pkg="pkg" v-on:qa_back="add_qa" />
     </el-dialog>
     <el-button type="primary" @click="askNewQuestion" class="new-question">
       QA
@@ -17,13 +17,14 @@
             <div slot="header" class="clearfix">
                 <span>News Summary</span>
             </div>
+            <p class="summary">{{summary}}</p>
         </el-card>
 
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>Fraud Analysis</span>
             </div>
-            <el-progress type="circle" :percentage="0"></el-progress>
+            <el-progress type="circle" :percentage="fraud_score"></el-progress>
         </el-card>
       </div>
       <div v-for="obj in qa_obj" class="qa">
@@ -46,29 +47,60 @@
 import QADialog from './QADialog.vue'
 export default {
     name: 'Analysis',
+    props: {
+        response: Object,
+        pkg: Object,
+    },
     components: {
         QADialog
     },
     data() {
         return {
-            qa_obj: [
-              {
-                question: 'What is the purpose of this project?',
-                answer: 'This project is to help people to understand the news and to make a decision about whether to read the news or not.'
-              },
-              {
-                question: 'What is the purpose of this project?',
-                answer: 'This project is to help people to understand the news and to make a decision about whether to read the news or not.'
-              },
-            ],
+            qa_obj: [],
+            summary: '',
+            fraud_score: 0,
             QADialogVisible: false,
         }
     },
     computed: {
-        //
+    },
+    watch: {
+        response: {
+          handler(val){
+            let answer_ = val["data"]["answer"];
+            let question_ = val["data"]["question"];
+            let summary = val["data"]["summary"];
+            let fraud_score = parseFloat((val["data"]["fruad"] * 100).toFixed(1));
+            if(summary != null) {
+              this.summary = summary;
+              this.qa_obj = [];
+            }
+            if(fraud_score != null) {
+              this.fraud_score = fraud_score;
+            }
+            if(answer_ != null) {
+              this.qa_obj.push({
+                question: question_,
+                answer: answer_
+              });
+            }
+          },
+          deep: true,
+          immediate: true
+        }
     },
     methods: {
         //
+        add_qa(response) {
+          console.log(response);
+          let question_ = response["data"]["question"];
+          let answer_ = response["data"]["answer"];
+          this.QADialogVisible = false;
+          this.qa_obj.push({
+              question: question_,
+              answer: answer_
+          });
+        },
         askNewQuestion() {
             this.QADialogVisible = true;
         },
@@ -141,5 +173,8 @@ export default {
     right: 30px;
     top: 300px;
     font-family: lobster;
+  }
+  .summary {
+    font-family: monospace;
   }
 </style>

@@ -9,7 +9,7 @@
         :visible.sync="centerDialogVisible"
         width="70%"
         center>
-        <Analysis />
+        <Analysis :response="response" :pkg="pkg" />
         </el-dialog>
         <div class="welcome-container">
             <div class="welcome-container-item">
@@ -71,6 +71,7 @@ export default {
             title: '',
             author: '',
             question: '',
+            response: {},
         }
     },
     created() {
@@ -99,28 +100,37 @@ export default {
 
         handleAnalysis() {
             if(!this.checkInput()) return ;
-            this.centerDialogVisible = true;
-            // let ajax = new XMLHttpRequest();
-            // ajax.open("POST", "http://127.0.0.1:5000/api/analysis", true);
-            // ajax.setRequestHeader("Content-type", "application/json");
-            // ajax.onreadystatechange = function() {
-            //     if (ajax.readyState == 4 && ajax.status == 200) {
-            //         console.log(ajax.responseText);
-            //         this.centerDialogVisible = true;
-            //     }
-            // }.bind(this);
-            // ajax.send(JSON.stringify({
-            //     text: this.text,
-            //     title: this.title,
-            //     author: this.author,
-            //     question: this.question
-            //     }
-            // ));
+            let ajax = new XMLHttpRequest();
+            let _this = this;
+            ajax.open("POST", "http://127.0.0.1:5000/api", true);
+            ajax.setRequestHeader("Content-type", "application/json");
+            ajax.onreadystatechange = function() {
+                if (ajax.readyState == 4 && ajax.status == 200) {
+                    let response = JSON.parse(ajax.responseText);
+                    _this.response = response;
+                    this.centerDialogVisible = true;
+                }
+            }.bind(this);
+            ajax.send(JSON.stringify({
+                text: this.text,
+                title: this.title,
+                author: this.author,
+                question: this.question,
+                service: 'all'
+                }
+            ));
         }
     },
     computed: {
         isLoading() {
             return this.centerDialogVisible;
+        },
+        pkg() {
+            return {
+                text: this.text,
+                title: this.title,
+                author: this.author,
+            }
         }
     }
 }

@@ -10,6 +10,9 @@
 <script>
 export default {
     name: 'QADialog',
+    props: {
+        pkg: Object,
+    },
     data() {
         return {
             qa_obj: [
@@ -31,6 +34,27 @@ export default {
     },
     methods: {
         //
+        submit() {
+            let ajax = new XMLHttpRequest();
+            let _this = this;
+            ajax.open("POST", "http://127.0.0.1:5000/api", true);
+            ajax.setRequestHeader("Content-type", "application/json");
+            ajax.onreadystatechange = function() {
+                if (ajax.readyState == 4 && ajax.status == 200) {
+                    let response = JSON.parse(ajax.responseText);
+                    console.log(response);
+                    _this.$emit('qa_back', response);
+                }
+            }.bind(this);
+            ajax.send(JSON.stringify({
+                text: this.pkg.text,
+                title: this.pkg.title,
+                author: this.pkg.author,
+                question: this.question,
+                service: 'qa'
+                }
+            ));
+        },
     },
 }
 </script>
